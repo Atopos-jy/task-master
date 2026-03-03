@@ -1,18 +1,8 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button, theme } from "antd";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  DashboardOutlined,
-  UnorderedListOutlined,
-  CalendarOutlined,
-  BarChartOutlined,
-  RobotOutlined,
-} from "@ant-design/icons";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
+import { mainRoutes } from "../router/layoutRoutes";
 
 const { Header, Sider, Content } = Layout;
 
@@ -28,33 +18,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const menuItems = [
-    {
-      key: "/user/dashboard",
-      icon: <DashboardOutlined />,
-      label: "仪表盘",
-    },
-    {
-      key: "/user/tasks",
-      icon: <UnorderedListOutlined />,
-      label: "任务管理",
-    },
-    {
-      key: "/user/calendar",
-      icon: <CalendarOutlined />,
-      label: "日历视图",
-    },
-    {
-      key: "/user/reports",
-      icon: <BarChartOutlined />,
-      label: "报表分析",
-    },
-    {
-      key: "/user/ai-assistant",
-      icon: <RobotOutlined />,
-      label: "AI 助手",
-    },
-  ];
+  const menuItems = mainRoutes
+    .filter((route) => !route.meta?.hideInMenu && route.meta?.title)
+    .map((route) => ({
+      key: `/${route.path}`,
+      icon: route.meta?.icon,
+      label: route.meta?.title,
+    }));
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -67,6 +37,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             background: "rgba(255, 255, 255, 0.2)",
           }}
         />
+        {collapsed ? "TM" : "TaskMaster"}
         <Menu
           theme="dark"
           mode="inline"

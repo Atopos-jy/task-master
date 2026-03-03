@@ -2,32 +2,26 @@ import React, { useEffect, useState } from "react";
 import {
   Tabs,
   Table,
-  Tag,
   Space,
   Button,
   Card,
   Typography,
-  Avatar,
-  Modal,
-  Input,
-  Select,
   message,
-  Timeline,
   Spin,
 } from "antd";
 import {
   PlusOutlined,
   UnorderedListOutlined,
   AppstoreOutlined,
-  ClockCircleOutlined,
 } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector } from "../../hooks/store";
-import { fetchTasks, deleteTask } from "../../stores/modules/taskSlice";
-import { Task } from "../../types";
+import { useAppDispatch, useAppSelector } from "@/hooks/store";
+import { fetchTasks, deleteTask } from "@/stores/modules/taskSlice";
+import { Task } from "@/types/task";
+import PageHeader from "@/components/common/PageHeader";
+import TaskStatusTag from "@/components/business/TaskStatusTag";
+import TaskPriorityTag from "@/components/business/TaskPriorityTag";
 
-const { Title, Text, Paragraph } = Typography;
-const { TextArea } = Input;
-const { Option } = Select;
+const { Title, Text } = Typography;
 
 const TaskManagement: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -59,29 +53,13 @@ const TaskManagement: React.FC = () => {
       title: "状态",
       dataIndex: "status",
       key: "status",
-      render: (status: string) => {
-        let color =
-          status === "Done"
-            ? "green"
-            : status === "In Progress"
-              ? "geekblue"
-              : "volcano";
-        return <Tag color={color}>{status.toUpperCase()}</Tag>;
-      },
+      render: (status: string) => <TaskStatusTag status={status} />,
     },
     {
       title: "优先级",
       dataIndex: "priority",
       key: "priority",
-      render: (priority: string) => {
-        let color =
-          priority === "High"
-            ? "red"
-            : priority === "Medium"
-              ? "orange"
-              : "green";
-        return <Tag color={color}>{priority}</Tag>;
-      },
+      render: (priority: string) => <TaskPriorityTag priority={priority} />,
     },
     {
       title: "操作",
@@ -129,9 +107,7 @@ const TaskManagement: React.FC = () => {
               <Title level={5} style={{ margin: 0 }}>
                 {status}
               </Title>
-              <Tag color="blue">
-                {tasks.filter((t) => t.status === status).length}
-              </Tag>
+              <TaskStatusTag status={status} />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {tasks
@@ -139,10 +115,25 @@ const TaskManagement: React.FC = () => {
                 .map((task) => (
                   <Card key={task.id} size="small" hoverable>
                     <Text strong>{task.title}</Text>
-                    <div style={{ marginTop: 8 }}>
-                      <Tag color={task.priority === "High" ? "red" : "blue"}>
-                        {task.priority}
-                      </Tag>
+                    <div
+                      style={{
+                        marginTop: 8,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TaskPriorityTag priority={task.priority} />
+                      <Space>
+                        <Button
+                          type="text"
+                          size="small"
+                          onClick={() => handleDelete(task.id)}
+                          danger
+                        >
+                          删除
+                        </Button>
+                      </Space>
                     </div>
                   </Card>
                 ))}
@@ -159,10 +150,11 @@ const TaskManagement: React.FC = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: 24,
         }}
       >
-        <Title level={3}>任务管理</Title>
+        <PageHeader title="任务管理" />
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -175,7 +167,7 @@ const TaskManagement: React.FC = () => {
       <Card>
         <Spin spinning={loading}>
           <Tabs
-            defaultActiveKey="list"
+            activeKey={view}
             onChange={setView}
             items={[
               {
@@ -191,7 +183,7 @@ const TaskManagement: React.FC = () => {
                     columns={columns}
                     dataSource={tasks}
                     rowKey="id"
-                    pagination={false}
+                    pagination={{ pageSize: 10 }}
                   />
                 ),
               },
@@ -209,15 +201,6 @@ const TaskManagement: React.FC = () => {
           />
         </Spin>
       </Card>
-
-      <Modal
-        title="新建任务"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-      >
-        <p>这里是新建任务表单（需完善）</p>
-      </Modal>
     </div>
   );
 };

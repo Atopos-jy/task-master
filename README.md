@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# Task Master
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React 18 + TypeScript + Vite 项目，集成 Ant Design 5.x, Redux Toolkit, React Router v6, Axios, ECharts。
 
-## Available Scripts
+## 快速开始
 
-In the project directory, you can run:
+### 1. 安装依赖
 
-### `npm start`
+```bash
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 2. 启动开发服务器
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm start
+```
 
-### `npm test`
+项目将在 http://localhost:3000 运行。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. 构建生产版本
 
-### `npm run build`
+```bash
+npm run build
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## API 对接说明
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+本项目默认使用 Mock 数据。如需对接真实 API (Apifox)：
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. 打开 `src/api/taskApi.ts` 和 `src/api/dashboardApi.ts`
+2. 将 `const USE_MOCK = true;` 修改为 `false`
+3. 在 `src/api/request.ts` 中配置你的 API 基础路径：
+   ```typescript
+   const instance = axios.create({
+     baseURL: "YOUR_API_BASE_URL", // 例如：http://127.0.0.1:4523/m1/123456-0-default
+     timeout: 10000,
+   });
+   ```
 
-### `npm run eject`
+## 项目结构
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+src/
+├── api/                    # API接口层
+│   ├── request.ts          # axios封装
+│   ├── taskApi.ts          # 任务相关接口
+│   └── dashboardApi.ts     # 仪表盘相关接口
+├── assets/                 # 静态资源
+├── components/             # 组件层
+│   ├── common/             # 公共组件 (StatCard, TaskChart, PageHeader, etc.)
+│   └── business/           # 业务组件 (TaskStatusTag, TaskPriorityTag)
+├── types/                  # 类型定义
+│   ├── api.ts              # API接口类型
+│   └── task.ts             # 任务相关类型
+├── utils/                  # 工具函数
+│   └── format.ts           # 格式化工具
+├── router/                 # 路由配置
+└── pages/                  # 页面组件
+    ├── Dashboard/          # 仪表盘
+    └── TaskManagement/     # 任务管理
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 技术栈
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Core**: React 18, TypeScript, Vite
+- **UI**: Ant Design 5.x
+- **State Management**: Redux Toolkit
+- **Routing**: React Router v6 (Lazy Loading)
+- **HTTP**: Axios
+- **Charts**: ECharts / echarts-for-react
+- **Styling**: SCSS / CSS Modules

@@ -1,24 +1,32 @@
-import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
-import Layout from '../pages/Layout';
-import Login from '../pages/Login';
-import AuthRoute from '../components/AuthRoute';
-import layoutRoutes from './layoutRoutes';
+import { createBrowserRouter } from "react-router-dom";
+import { layoutRoutes, basicRoutes } from "./layoutRoutes";
+import { RouteObject } from "react-router-dom";
+import AuthRoute from "../components/common/AuthRoute";
+import ErrorBoundary from "../components/common/ErrorBoundary";
+import MainLayout from "../layouts";
+import { Outlet } from "react-router-dom";
 
-const router = createBrowserRouter([
+const Layout = () => (
+  <MainLayout>
+    <Outlet />
+  </MainLayout>
+);
+
+const routes: RouteObject[] = [
   {
-    path: '/',
+    path: "/",
     element: (
-      <AuthRoute>
-        <Layout />
-      </AuthRoute>
+      <ErrorBoundary>
+        <AuthRoute>
+          <Layout />
+        </AuthRoute>
+      </ErrorBoundary>
     ),
     children: layoutRoutes,
   },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-]);
+  ...basicRoutes,
+];
+
+const router = createBrowserRouter(routes);
 
 export default router;
